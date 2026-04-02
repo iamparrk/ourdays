@@ -36,7 +36,6 @@ nav.scrolled { border-bottom-color: #e8e8e8; }
   color: #000;
   text-decoration: none;
   letter-spacing: 2px;
-  text-transform: lowercase;
 }
 .nav-right { display: flex; align-items: center; gap: 36px; }
 .nav-links { display: flex; gap: 32px; list-style: none; }
@@ -135,6 +134,7 @@ nav.scrolled { border-bottom-color: #e8e8e8; }
   flex: 0 0 calc(33.333% - 14px);
   text-decoration: none;
   display: block;
+  cursor: pointer;
 }
 .gallery-thumb {
   aspect-ratio: 3/4;
@@ -151,23 +151,20 @@ nav.scrolled { border-bottom-color: #e8e8e8; }
   transition: transform 0.7s ease;
 }
 .gallery-item:hover .g-placeholder { transform: scale(1.04); }
+.g-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+  display: block;
+}
+.gallery-item:hover .g-img { transform: scale(1.04); }
 .pw { background: #111; }
 .pl { background: #e8e8e8; }
 .pc { background: #f2f2f2; }
 .t-inner { text-align: center; padding: 20px; }
-.t-inner p {
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  font-weight: 300;
-}
-.t-inner strong {
-  font-size: 18px;
-  font-weight: 400;
-  display: block;
-  letter-spacing: 1px;
-}
+.t-inner p { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; font-weight: 300; }
+.t-inner strong { font-size: 18px; font-weight: 400; display: block; letter-spacing: 1px; }
 .pw .t-inner p { color: rgba(255,255,255,0.35); }
 .pw .t-inner strong { color: rgba(255,255,255,0.88); }
 .pl .t-inner p { color: #aaa; }
@@ -207,6 +204,90 @@ nav.scrolled { border-bottom-color: #e8e8e8; }
   justify-content: center;
 }
 .s-btn:hover { background: #000; border-color: #000; color: #fff; }
+
+/* LIGHTBOX */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.lightbox.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.lightbox-inner {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.lightbox-img {
+  max-width: 70vw;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+}
+.lightbox-info {
+  min-width: 200px;
+  max-width: 240px;
+  color: #fff;
+}
+.lb-cat {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+.lb-name {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.lb-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.8;
+}
+.lb-close {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  font-size: 28px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s;
+  line-height: 1;
+}
+.lb-close:hover { color: #fff; }
+.lb-prev, .lb-next {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s;
+  padding: 20px;
+}
+.lb-prev:hover, .lb-next:hover { color: #fff; }
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
 
 /* PROCESS */
 .process-section {
@@ -338,6 +419,9 @@ body.krm .en-b { display: none; }
   .contact-inner { grid-template-columns: 1fr; gap: 40px; }
   .f-row { grid-template-columns: 1fr; }
   footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+  .lightbox-inner { flex-direction: column; }
+  .lightbox-img { max-width: 90vw; max-height: 60vh; }
+  .lightbox-info { min-width: unset; max-width: 90vw; }
 }
 </style>
 </head>
@@ -374,18 +458,10 @@ body.krm .en-b { display: none; }
   </p>
   <div class="tabs reveal rd2">
     <button class="tab-btn active" data-cat="all">ALL</button>
-    <button class="tab-btn" data-cat="web-invite">
-      <span class="en">Web Invite</span><span class="ko">웹 초대장</span>
-    </button>
-    <button class="tab-btn" data-cat="landing">
-      <span class="en">Landing Page</span><span class="ko">랜딩페이지</span>
-    </button>
-    <button class="tab-btn" data-cat="graphic">
-      <span class="en">Graphic</span><span class="ko">그래픽</span>
-    </button>
-    <button class="tab-btn" data-cat="motion">
-      <span class="en">Motion</span><span class="ko">모션</span>
-    </button>
+    <button class="tab-btn" data-cat="web-invite"><span class="en">Web Invite</span><span class="ko">웹 초대장</span></button>
+    <button class="tab-btn" data-cat="landing"><span class="en">Landing Page</span><span class="ko">랜딩페이지</span></button>
+    <button class="tab-btn" data-cat="graphic"><span class="en">Graphic</span><span class="ko">그래픽</span></button>
+    <button class="tab-btn" data-cat="motion"><span class="en">Motion</span><span class="ko">모션</span></button>
   </div>
 </section>
 
@@ -393,7 +469,8 @@ body.krm .en-b { display: none; }
   <div class="gallery-wrap" id="gWrap">
     <div class="gallery-track" id="gTrack">
 
-      <a href="./wedding/index.html" class="gallery-item" data-cat="web-invite">
+      <!-- WEB INVITE — 링크 연결 -->
+      <a href="./wedding/index.html" class="gallery-item" data-cat="web-invite" data-type="link">
         <div class="gallery-thumb">
           <div class="g-placeholder pw">
             <div class="t-inner"><p>Wedding</p><strong>Jiho & Sua</strong></div>
@@ -405,7 +482,51 @@ body.krm .en-b { display: none; }
         <p class="g-desc"><span class="en">D-Day · Gallery · Map</span><span class="ko">디데이 · 갤러리 · 카카오맵</span></p>
       </a>
 
-      <div class="gallery-item" data-cat="landing">
+      <!-- GRAPHIC — 팝업 -->
+      <div class="gallery-item" data-cat="graphic" data-type="popup"
+        data-img="poster-brightestday.jpg"
+        data-name="The Brightest Day"
+        data-name-ko="가장 화창한 날"
+        data-cat-label="Graphic · Film Poster"
+        data-desc="Written & Directed by Park Ji Young">
+        <div class="gallery-thumb">
+          <img class="g-img" src="poster-brightestday.jpg" alt="The Brightest Day Poster">
+        </div>
+        <p class="g-cat">Graphic</p>
+        <p class="g-name"><span class="en">Film Poster — The Brightest Day</span><span class="ko">영화 포스터 — 가장 화창한 날</span></p>
+        <p class="g-desc"><span class="en">Short Film · Park Ji Young</span><span class="ko">단편영화 · 박지영 감독</span></p>
+      </div>
+
+      <div class="gallery-item" data-cat="graphic" data-type="popup"
+        data-img="poster-boxing-tokyo.png"
+        data-name="Boxing Championship"
+        data-name-ko="복싱 챔피언십"
+        data-cat-label="Graphic · Sports Poster"
+        data-desc="WBO Asia Pacific — Tokyo Dome 2026">
+        <div class="gallery-thumb">
+          <img class="g-img" src="poster-boxing-tokyo.png" alt="Boxing Tokyo Dome Poster">
+        </div>
+        <p class="g-cat">Graphic</p>
+        <p class="g-name"><span class="en">Sports Poster — Tokyo Dome</span><span class="ko">스포츠 포스터 — 도쿄돔</span></p>
+        <p class="g-desc"><span class="en">WBO Asia Pacific · 2026</span><span class="ko">WBO 아시아태평양 · 2026</span></p>
+      </div>
+
+      <div class="gallery-item" data-cat="graphic" data-type="popup"
+        data-img="poster-boxing-korakuen.png"
+        data-name="Boxing Championship"
+        data-name-ko="복싱 챔피언십"
+        data-cat-label="Graphic · Sports Poster"
+        data-desc="LEMINO Boxing Phoenix Battle 147 — Korakuen Hall">
+        <div class="gallery-thumb">
+          <img class="g-img" src="poster-boxing-korakuen.png" alt="Boxing Korakuen Poster">
+        </div>
+        <p class="g-cat">Graphic</p>
+        <p class="g-name"><span class="en">Sports Poster — Korakuen Hall</span><span class="ko">스포츠 포스터 — 코라쿠엔홀</span></p>
+        <p class="g-desc"><span class="en">LEMINO Boxing · 2025</span><span class="ko">레미노 복싱 · 2025</span></p>
+      </div>
+
+      <!-- LANDING PAGE -->
+      <div class="gallery-item" data-cat="landing" data-type="none">
         <div class="gallery-thumb">
           <div class="g-placeholder pl">
             <div class="t-inner"><p>Landing</p><strong><span class="en">Business</span><span class="ko">소상공인</span></strong></div>
@@ -417,7 +538,8 @@ body.krm .en-b { display: none; }
         <p class="g-desc"><span class="en">Booking · Menu · Contact</span><span class="ko">예약 · 메뉴 · 문의</span></p>
       </div>
 
-      <div class="gallery-item" data-cat="web-invite">
+      <!-- WEB INVITE COMING -->
+      <div class="gallery-item" data-cat="web-invite" data-type="none">
         <div class="gallery-thumb">
           <div class="g-placeholder pc">
             <div class="t-inner"><p>Invitation</p><strong>COMING SOON</strong></div>
@@ -429,31 +551,7 @@ body.krm .en-b { display: none; }
         <p class="g-desc"><span class="en">Natural Green Style</span><span class="ko">내추럴 그린 스타일</span></p>
       </div>
 
-      <div class="gallery-item" data-cat="web-invite">
-        <div class="gallery-thumb">
-          <div class="g-placeholder pc">
-            <div class="t-inner"><p>Invitation</p><strong>COMING SOON</strong></div>
-          </div>
-          <span class="gbadge bc">COMING</span>
-        </div>
-        <p class="g-cat">Web Invite</p>
-        <p class="g-name"><span class="en">Party Invite</span><span class="ko">파티 초대장</span></p>
-        <p class="g-desc"><span class="en">Warm Orange Style</span><span class="ko">웜 오렌지 스타일</span></p>
-      </div>
-
-      <div class="gallery-item" data-cat="graphic">
-        <div class="gallery-thumb">
-          <div class="g-placeholder pc">
-            <div class="t-inner"><p>Graphic</p><strong>COMING SOON</strong></div>
-          </div>
-          <span class="gbadge bc">COMING</span>
-        </div>
-        <p class="g-cat">Graphic</p>
-        <p class="g-name"><span class="en">Brand Design</span><span class="ko">브랜드 디자인</span></p>
-        <p class="g-desc"><span class="en">Logo · Card · SNS</span><span class="ko">로고 · 명함 · SNS</span></p>
-      </div>
-
-      <div class="gallery-item" data-cat="motion">
+      <div class="gallery-item" data-cat="motion" data-type="none">
         <div class="gallery-thumb">
           <div class="g-placeholder pc">
             <div class="t-inner"><p>Motion</p><strong>COMING SOON</strong></div>
@@ -473,6 +571,22 @@ body.krm .en-b { display: none; }
   </div>
 </section>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLb()">×</button>
+  <button class="lb-prev" onclick="lbNav(-1)">←</button>
+  <button class="lb-next" onclick="lbNav(1)">→</button>
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lbImg" src="" alt="">
+    <div class="lightbox-info">
+      <p class="lb-cat" id="lbCat"></p>
+      <p class="lb-name" id="lbName"></p>
+      <p class="lb-desc" id="lbDesc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS -->
 <section class="process-section" id="process">
   <div class="sec-top reveal">
     <p class="sec-eye"><span class="en">How it works</span><span class="ko">어떻게 진행되나요</span></p>
@@ -508,7 +622,7 @@ body.krm .en-b { display: none; }
         <span class="p-icon">+</span>
       </div>
       <div class="p-body"><p>
-        <span class="en">Draft delivered in 1–3 days. Two rounds of revisions included as standard.</span>
+        <span class="en">Draft delivered in 1–3 days. Two rounds of revisions included.</span>
         <span class="ko">1~3일 이내 초안 전달. 2회 수정이 기본 포함됩니다.</span>
       </p></div>
     </div>
@@ -519,20 +633,21 @@ body.krm .en-b { display: none; }
         <span class="p-icon">+</span>
       </div>
       <div class="p-body"><p>
-        <span class="en">Your dedicated ourdays.kr link, ready to share anywhere instantly.</span>
+        <span class="en">Your dedicated ourdays.kr link, ready to share anywhere.</span>
         <span class="ko">ourdays.kr 전용 링크를 전달해드립니다. 어디서든 바로 공유 가능합니다.</span>
       </p></div>
     </div>
   </div>
 </section>
 
+<!-- CONTACT -->
 <section class="contact-section" id="contact">
   <div class="contact-inner">
     <div class="reveal">
       <p class="sec-eye ct-eye"><span class="en">Let's work together</span><span class="ko">함께 만들어요</span></p>
       <h2 class="sec-title ct-title"><span class="en">Get in touch</span><span class="ko">문의하기</span></h2>
       <p class="ct-desc">
-        <span class="en">All inquiries welcome.<br>Share your idea and we'll respond as soon as possible.</span>
+        <span class="en">All inquiries welcome.<br>Share your idea and we'll respond soon.</span>
         <span class="ko">어떤 작업이든 환영합니다.<br>아이디어가 있다면 편하게 남겨주세요.</span>
       </p>
     </div>
@@ -563,22 +678,25 @@ body.krm .en-b { display: none; }
 </footer>
 
 <script>
+// LANG
 function setLang(lang) {
   document.body.classList.toggle('krm', lang === 'ko');
   document.getElementById('btnEn').classList.toggle('active', lang === 'en');
   document.getElementById('btnKo').classList.toggle('active', lang === 'ko');
-  document.documentElement.lang = lang === 'ko' ? 'ko' : 'en';
 }
 
+// NAV
 window.addEventListener('scroll', () => {
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
 });
 
+// REVEAL
 const ro = new IntersectionObserver(e => {
   e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
+// TABS
 const allItems = Array.from(document.querySelectorAll('.gallery-item'));
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -594,9 +712,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
+// SLIDER
 let currentIdx = 0;
 const track = document.getElementById('gTrack');
-
 function iw() {
   const el = track.querySelector('.gallery-item');
   return el ? el.offsetWidth + 20 : 0;
@@ -608,7 +726,6 @@ function maxI() {
 function move() {
   track.style.transform = `translateX(-${currentIdx * iw()}px)`;
 }
-
 document.getElementById('nextBtn').addEventListener('click', () => {
   currentIdx = currentIdx >= maxI() ? 0 : currentIdx + 1;
   move();
@@ -632,6 +749,51 @@ startAuto();
 document.getElementById('gWrap').addEventListener('mouseenter', stopAuto);
 document.getElementById('gWrap').addEventListener('mouseleave', startAuto);
 
+// LIGHTBOX
+const popupItems = allItems.filter(i => i.dataset.type === 'popup');
+let lbIdx = 0;
+
+allItems.forEach(item => {
+  item.addEventListener('click', function(e) {
+    if (this.dataset.type === 'link') return;
+    if (this.dataset.type === 'none') return;
+    e.preventDefault();
+    lbIdx = popupItems.indexOf(this);
+    openLb(this);
+  });
+});
+
+function openLb(item) {
+  const isKo = document.body.classList.contains('krm');
+  document.getElementById('lbImg').src = item.dataset.img;
+  document.getElementById('lbCat').textContent = item.dataset.catLabel;
+  document.getElementById('lbName').textContent = isKo ? item.dataset.nameKo : item.dataset.name;
+  document.getElementById('lbDesc').textContent = item.dataset.desc;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLb() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + popupItems.length) % popupItems.length;
+  openLb(popupItems[lbIdx]);
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLb();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowRight') lbNav(1);
+  if (e.key === 'ArrowLeft') lbNav(-1);
+});
+
+// ACCORDION
 function toggleP(h) {
   const item = h.parentElement;
   const was = item.classList.contains('open');
@@ -639,6 +801,7 @@ function toggleP(h) {
   if (!was) item.classList.add('open');
 }
 
+// FORM
 document.getElementById('cForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   try {
