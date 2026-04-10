@@ -412,7 +412,14 @@ body.krm .en-b { display: none; }
   .nav-links { display: none; }
   .hero { padding: 90px 24px 0; }
   .gallery-section { padding: 0 24px 80px; }
+
+  .gallery-track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
   .gallery-item { width: 100%; }
+
   .process-section, .contact-section { padding: 80px 24px; }
   .contact-inner { grid-template-columns: 1fr; gap: 40px; }
   .f-row { grid-template-columns: 1fr; }
@@ -420,12 +427,6 @@ body.krm .en-b { display: none; }
   .lightbox-inner { flex-direction: column; }
   .lightbox-img { max-width: 90vw; max-height: 60vh; }
   .lightbox-info { min-width: unset; max-width: 90vw; }
-}
-  .gallery-item,
-.gallery-item p,
-.gallery-item span {
-  text-decoration: none;
-  color: inherit;
 }
 </style>
 </head>
