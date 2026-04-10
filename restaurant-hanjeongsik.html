@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>하연 — 전통 한정식</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:      #0a0806;
+    --dark:       #1a1510;
+    --dark-mid:   #2a2018;
+    --gold:       #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-pale:  #f5e8c0;
+    --cream:      #faf6ed;
+    --warm-white: #fffdf8;
+    --text:       #1a1510;
+    --text-mid:   #6b5d4e;
+    --text-light: #a8977f;
+    --border:     rgba(201,168,76,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    font-family: 'Noto Serif KR', serif;
+    color: var(--cream);
+    max-width: 480px;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 650px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 60px;
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    background-image: url('20260410_1441_Image_Generation_simple_compose_01kntyh494efk9s2hdesev72we.png');
+    background-size: cover;
+    background-position: center top;
+    transform: scale(1.05);
+    animation: slowZoom 12s ease forwards;
+  }
+
+  @keyframes slowZoom {
+    from { transform: scale(1.05); }
+    to   { transform: scale(1.0); }
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,8,6,0.2) 0%,
+      rgba(10,8,6,0.1) 30%,
+      rgba(10,8,6,0.5) 65%,
+      rgba(10,8,6,0.92) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 30px;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  }
+
+  .hero-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 7px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .hero-title-ko {
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--warm-white);
+    letter-spacing: 12px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .hero-title-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 5px;
+    margin-bottom: 28px;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .hero-divider::before,
+  .hero-divider::after {
+    content: '';
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+
+  .hero-divider::after {
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .hero-divider-diamond {
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .hero-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 3px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.25);
+    font-size: 9px;
+    letter-spacing: 3px;
+    z-index: 2;
+    animation: bounce 2.5s infinite;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(to bottom, var(--gold-light), transparent);
+    opacity: 0.5;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 70px 30px;
+    position: relative;
+  }
+
+  .sec-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .sec-label::before,
+  .sec-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border));
+  }
+
+  .sec-label::after {
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── INTRO ── */
+  .intro-section {
+    background: var(--dark);
+    text-align: center;
+  }
+
+  .intro-text {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 2.4;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 30px;
+  }
+
+  .intro-text em {
+    font-style: normal;
+    color: var(--gold-light);
+    font-weight: 400;
+  }
+
+  .intro-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--warm-white);
+    font-weight: 300;
+    line-height: 1.7;
+    padding: 0 10px;
+  }
+
+  /* ── MENU ── */
+  .menu-section {
+    background: var(--black);
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .menu-item {
+    background: var(--dark);
+    padding: 24px 20px;
+    text-align: center;
+    transition: background 0.4s;
+  }
+
+  .menu-item:hover {
+    background: var(--dark-mid);
+  }
+
+  .menu-item.featured {
+    grid-column: span 2;
+    background: var(--dark-mid);
+  }
+
+  .menu-icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: block;
+    opacity: 0.8;
+  }
+
+  .menu-name {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--warm-white);
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .menu-name-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .menu-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .menu-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  /* ── PRIVATE DINING ── */
+  .private-section {
+    background: var(--dark);
+    text-align: center;
+  }
+
+  .private-box {
+    border: 1px solid var(--border);
+    padding: 36px 24px;
+    position: relative;
+  }
+
+  .private-box::before {
+    content: '';
+    position: absolute;
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+    border: 1px solid rgba(201,168,76,0.08);
+    pointer-events: none;
+  }
+
+  .private-title {
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--warm-white);
+    letter-spacing: 4px;
+    margin-bottom: 16px;
+  }
+
+  .private-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.45);
+    line-height: 2.2;
+    margin-bottom: 28px;
+  }
+
+  .private-features {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .pf-item {
+    text-align: center;
+  }
+
+  .pf-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pf-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+  }
+
+  /* ── RESERVATION CTA ── */
+  .reserve-section {
+    background: var(--dark-mid);
+    text-align: center;
+  }
+
+  .reserve-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--warm-white);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .reserve-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.4);
+    line-height: 2;
+    margin-bottom: 36px;
+    letter-spacing: 0.5px;
+  }
+
+  .reserve-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    padding: 16px 44px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .reserve-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+
+  .reserve-tel {
+    margin-top: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 3px;
+  }
+
+  /* ── INFO ── */
+  .info-section {
+    background: var(--black);
+  }
+
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+
+  .info-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    min-height: 56px;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-key {
+    width: 90px;
+    min-width: 90px;
+    padding: 18px 16px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+
+  .info-val {
+    padding: 18px 16px;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.8;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── MAP ── */
+  .map-box {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+  }
+
+  .map-box:hover { background: var(--dark-mid); }
+
+  .map-label {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 50px 30px 40px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--warm-white);
+    letter-spacing: 10px;
+    margin-bottom: 6px;
+  }
+
+  .footer-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+
+  footer p {
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    line-height: 2.2;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gold);
+    color: var(--black);
+    padding: 12px 24px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 500;
+    transition: transform 0.4s ease;
+    z-index: 999;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tag">Traditional Korean Fine Dining</p>
+    <h1 class="hero-title-ko">하 연</h1>
+    <p class="hero-title-en">Ha Yeon — Seoul</p>
+    <div class="hero-divider"><div class="hero-divider-diamond"></div></div>
+    <p class="hero-sub">전통의 깊이, 현대의 감각</p>
+  </div>
+  <div class="scroll-hint">scroll</div>
+</section>
+
+<!-- INTRO -->
+<section class="intro-section reveal">
+  <div class="sec-label">Our Story</div>
+  <p class="intro-text">
+    오랜 시간 전해 내려온 <em>궁중 한정식</em>의 정수를<br>
+    현대적 감각으로 재해석합니다.<br><br>
+    제철 식재료만을 엄선하여<br>
+    매일 아침 새롭게 준비됩니다.
+  </p>
+  <p class="intro-quote">
+    "음식은 단순한 끼니가 아닌,<br>
+    사람과 사람을 잇는 언어입니다."
+  </p>
+</section>
+
+<!-- MENU -->
+<section class="menu-section reveal">
+  <div class="sec-label">Menu</div>
+  <div class="menu-grid">
+    <div class="menu-item featured">
+      <span class="menu-icon">🍱</span>
+      <p class="menu-name">궁중 한정식</p>
+      <p class="menu-name-en">Royal Hanjeongsik</p>
+      <p class="menu-price">₩ 180,000</p>
+    </div>
+    <div class="menu-item">
+      <span class="menu-icon">🥩</span>
+      <p class="menu-name">갈비찜 코스</p>
+      <p class="menu-name-en">Braised Short Rib</p>
+      <p class="menu-price">₩ 95,000</p>
+    </div>
+    <div class="menu-item">
+      <span class="menu-icon">🐟</span>
+      <p class="menu-name">해산물 정식</p>
+      <p class="menu-name-en">Seafood Course</p>
+      <p class="menu-price">₩ 85,000</p>
+    </div>
+    <div class="menu-item">
+      <span class="menu-icon">🌿</span>
+      <p class="menu-name">채식 정식</p>
+      <p class="menu-name-en">Vegetarian Set</p>
+      <p class="menu-price">₩ 75,000</p>
+    </div>
+    <div class="menu-item">
+      <span class="menu-icon">🍶</span>
+      <p class="menu-name">주류 페어링</p>
+      <p class="menu-name-en">Beverage Pairing</p>
+      <p class="menu-price">₩ 45,000</p>
+    </div>
+  </div>
+  <p class="menu-note">모든 코스는 1인 기준 · 2인 이상 예약<br>세금 및 봉사료 별도</p>
+</section>
+
+<!-- PRIVATE DINING -->
+<section class="private-section reveal">
+  <div class="sec-label">Private Dining</div>
+  <div class="private-box">
+    <p class="private-title">프라이빗 룸</p>
+    <p class="private-desc">
+      소중한 자리를 위한 독립된 공간.<br>
+      비즈니스 접대부터 가족 모임까지<br>
+      특별한 순간을 품격 있게 연출합니다.
+    </p>
+    <div class="private-features">
+      <div class="pf-item">
+        <span class="pf-num">3</span>
+        <p class="pf-label">룸 구성</p>
+      </div>
+      <div class="pf-item">
+        <span class="pf-num">2–12</span>
+        <p class="pf-label">인원</p>
+      </div>
+      <div class="pf-item">
+        <span class="pf-num">전용</span>
+        <p class="pf-label">서비스</p>
+      </div>
+    </div>
+    <button class="reserve-btn" onclick="showToast('예약 문의: 02-000-0000')">룸 예약 문의</button>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="reserve-section reveal">
+  <div class="sec-label">Reservation</div>
+  <p class="reserve-title">Special Evening<br>Awaits You</p>
+  <p class="reserve-desc">
+    하연의 특별한 저녁을 경험하세요.<br>
+    예약은 방문 3일 전까지 가능합니다.
+  </p>
+  <button class="reserve-btn" onclick="showToast('예약 페이지로 이동합니다')">지금 예약하기</button>
+  <p class="reserve-tel">02 — 000 — 0000</p>
+</section>
+
+<!-- INFO -->
+<section class="info-section reveal">
+  <div class="sec-label">Information</div>
+  <div class="info-list">
+    <div class="info-row">
+      <p class="info-key">영업</p>
+      <p class="info-val">화–일 · 12:00 – 21:30<br>월요일 정기 휴무</p>
+    </div>
+    <div class="info-row">
+      <p class="info-key">점심</p>
+      <p class="info-val">12:00 – 14:30 (라스트오더 14:00)</p>
+    </div>
+    <div class="info-row">
+      <p class="info-key">저녁</p>
+      <p class="info-val">18:00 – 21:30 (라스트오더 20:30)</p>
+    </div>
+    <div class="info-row">
+      <p class="info-key">주소</p>
+      <p class="info-val">서울특별시 종로구 북촌로 00</p>
+    </div>
+    <div class="info-row">
+      <p class="info-key">주차</p>
+      <p class="info-val">발렛파킹 운영 (2시간 무료)</p>
+    </div>
+  </div>
+  <div class="map-box" onclick="showToast('지도 앱으로 연결합니다')">
+    <p style="font-size:20px;">📍</p>
+    <p class="map-label">지도 보기</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-logo">하 연</p>
+  <p class="footer-sub">Ha Yeon — Traditional Korean Dining</p>
+  <p>서울특별시 종로구 북촌로 00<br>02-000-0000 · hayon@email.com<br><br>© 2025 하연. All rights reserved.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>
