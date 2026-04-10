@@ -124,23 +124,16 @@ nav.scrolled { border-bottom-color: #e8e8e8; }
 /* GALLERY */
 .gallery-section { padding: 0 48px 100px; }
 .gallery-wrap {
-  overflow: hidden;
   margin-top: 44px;
-  cursor: grab;
 }
-.gallery-wrap:active { cursor: grabbing; }
 .gallery-track {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
-  will-change: transform;
 }
 .gallery-item {
-  flex: 0 0 calc(33.333% - 14px);
-  text-decoration: none;
-  display: block;
-  cursor: pointer;
-}
+  width: 100%;
+  }
 .gallery-thumb {
   aspect-ratio: 3/4;
   overflow: hidden;
@@ -801,42 +794,31 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// SLIDER
-let currentIdx = 0;
-const track = document.getElementById('gTrack');
-function iw() {
-  const el = track.querySelector('.gallery-item');
-  return el ? el.offsetWidth + 20 : 0;
-}
-function maxI() {
-  const v = allItems.filter(i => i.style.display !== 'none');
-  return Math.max(0, v.length - 3);
-}
-function move() {
-  track.style.transform = `translateX(-${currentIdx * iw()}px)`;
-}
-document.getElementById('nextBtn').addEventListener('click', () => {
-  currentIdx = currentIdx >= maxI() ? 0 : currentIdx + 1;
-  move();
+// GRID FILTER (최신순 = HTML 역순)
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    // 최신순: 역순으로 재배열
+    const filtered = [...allItems].reverse().filter(i =>
+      cat === 'all' || i.dataset.cat === cat
+    );
+    const track = document.getElementById('gTrack');
+    track.innerHTML = '';
+    filtered.forEach(i => {
+      i.style.display = 'block';
+      track.appendChild(i);
+    });
+  });
 });
-document.getElementById('prevBtn').addEventListener('click', () => {
-  currentIdx = currentIdx <= 0 ? maxI() : currentIdx - 1;
-  move();
+// 초기 로드도 최신순
+window.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('gTrack');
+  const reversed = [...allItems].reverse();
+  track.innerHTML = '';
+  reversed.forEach(i => track.appendChild(i));
 });
-window.addEventListener('resize', move);
-
-let timer;
-function startAuto() {
-  timer = setInterval(() => {
-    currentIdx = currentIdx >= maxI() ? 0 : currentIdx + 1;
-    move();
-  }, 3000);
-}
-function stopAuto() { clearInterval(timer); }
-function resetAuto() { stopAuto(); startAuto(); }
-startAuto();
-document.getElementById('gWrap').addEventListener('mouseenter', stopAuto);
-document.getElementById('gWrap').addEventListener('mouseleave', startAuto);
 
 // LIGHTBOX
 const popupItems = allItems.filter(i => i.dataset.type === 'popup');
