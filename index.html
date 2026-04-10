@@ -475,6 +475,26 @@ a.gallery-item * { text-decoration: none; color: inherit; }
     <button class="tab-btn" data-cat="landing"><span class="en">Landing Page</span><span class="ko">랜딩페이지</span></button>
     <button class="tab-btn" data-cat="motion"><span class="en">Motion&AI</span><span class="ko">모션&AI</span></button>
   </div>
+
+  <div id="moreBtn" style="display:none; justify-content:center; margin-top:40px;">
+  <button style="
+    font-size:10px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    background:none;
+    border:1px solid #e0e0e0;
+    padding:14px 40px;
+    cursor:pointer;
+    font-family:'Noto Sans',sans-serif;
+    color:#888;
+    transition:all 0.2s;
+  "
+  onmouseover="this.style.background='#000';this.style.color='#fff';this.style.borderColor='#000'"
+  onmouseout="this.style.background='none';this.style.color='#888';this.style.borderColor='#e0e0e0'"
+  >
+    View More ↓
+  </button>
+</div>
 </section>
 
 <section class="gallery-section" id="gallery">
@@ -757,21 +777,47 @@ const ro = new IntersectionObserver(e => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-// TABS
-const allItems = Array.from(document.querySelectorAll('.gallery-item'));
+// TABS & PAGINATION
+const LIMIT = 12;
+
+function renderGallery(cat) {
+  const track = document.getElementById('gTrack');
+  const filtered = [...allItems].reverse().filter(i =>
+    cat === 'all' || i.dataset.cat === cat
+  );
+  
+  // 12개까지만 보여주기
+  track.innerHTML = '';
+  filtered.slice(0, LIMIT).forEach(i => {
+    i.style.display = 'block';
+    track.appendChild(i);
+  });
+
+  // more 버튼 처리
+  const moreBtn = document.getElementById('moreBtn');
+  if (filtered.length > LIMIT) {
+    moreBtn.style.display = 'flex';
+    moreBtn.onclick = () => {
+      filtered.slice(LIMIT).forEach(i => {
+        i.style.display = 'block';
+        track.appendChild(i);
+      });
+      moreBtn.style.display = 'none';
+    };
+  } else {
+    moreBtn.style.display = 'none';
+  }
+}
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const cat = btn.dataset.cat;
-    allItems.forEach(i => {
-      i.style.display = (cat === 'all' || i.dataset.cat === cat) ? 'block' : 'none';
-    });
-    currentIdx = 0;
-    move();
-    resetAuto();
+    renderGallery(btn.dataset.cat);
   });
 });
+
+window.addEventListener('DOMContentLoaded', () => renderGallery('all'));
 
 // GRID FILTER (최신순 = HTML 역순)
 document.querySelectorAll('.tab-btn').forEach(btn => {
